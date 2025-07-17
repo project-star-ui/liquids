@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>Liquid Learning!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        /* Existing Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes bubble {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @keyframes liquid-flow {
+            0% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40%/50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-10%); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes pulse-scale {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* Custom Classes */
+        .floating { animation: float 6s ease-in-out infinite; }
+        .bubbling { animation: bubble 2s ease-in-out infinite; }
+        .liquid-shape { animation: liquid-flow 8s ease-in-out infinite; }
+        .liquid-bg {
+            background: linear-gradient(-45deg, #e0f7ff, #b3e5fc, #81d4fa, #4fc3f7);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        .btn-liquid {
+            background: linear-gradient(90deg, rgba(100,198,255,1) 0%, rgba(62,95,200,1) 100%);
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 10px 5px;
+            cursor: pointer;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+            transition: all 0.3s ease;
+            transform: perspective(1px) translateZ(0);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-liquid:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px 0 rgba(65, 132, 234, 0.85);
+        }
+        .btn-liquid:active {
+            transform: translateY(1px);
+        }
+        .drop {
+            position: absolute;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            filter: blur(5px);
+            z-index: 0;
+        }
+        .content-container {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255,255,255,0.85);
+            border-radius: 20px;
+            padding: 20px; /* Default padding for mobile */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: pulse-scale 4s ease-in-out infinite;
+            max-width: 90%; /* Constrain width on smaller screens */
+        }
+        .wave-element {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 150%;
+            height: 80px; /* Default height for mobile */
+            background: rgba(179, 229, 252, 0.5);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            animation: wave 10s ease-in-out infinite alternate;
+            z-index: 0;
+            filter: blur(3px);
+        }
+        .wave-element.wave-2 {
+            background: rgba(129, 212, 250, 0.4);
+            animation-duration: 12s;
+            animation-delay: -2s;
+            left: -20%;
+            height: 60px;
+        }
+        .wave-element.wave-3 {
+            background: rgba(79, 195, 247, 0.3);
+            animation-duration: 8s;
+            animation-delay: -4s;
+            left: -5%;
+            height: 100px;
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 640px) { /* sm breakpoint */
+            .content-container {
+                padding: 30px; /* More padding for larger screens */
+                max-width: 600px; /* Max width for sm screens */
+            }
+            .btn-liquid {
+                font-size: 20px; /* Slightly larger font on sm+ */
+                padding: 18px 36px;
+            }
+            .wave-element { height: 100px; }
+            .wave-element.wave-2 { height: 80px; }
+            .wave-element.wave-3 { height: 120px; }
+            .floating { animation-duration: 6s; } /* Faster on desktop */
+            .bubbling { animation-duration: 2s; }
+            .liquid-shape { animation-duration: 8s; }
+        }
+
+        @media (min-width: 768px) { /* md breakpoint */
+            .content-container {
+                padding: 40px;
+                max-width: 700px; /* Max width for md screens */
+            }
+            .btn-liquid {
+                font-size: 22px; /* Even larger font on md+ */
+                padding: 20px 40px;
+            }
+            .wave-element { height: 120px; }
+            .wave-element.wave-2 { height: 100px; }
+            .wave-element.wave-3 { height: 140px; }
+        }
+
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .content-container {
+                max-width: 800px; /* Max width for lg screens */
+            }
+            /* Further adjustments for very large screens if needed */
+        }
+
+        /* Specific adjustments for the randomly generated bubbles */
+        .bubble {
+            animation: float-random var(--float-duration) ease-in-out infinite var(--float-delay),
+                       bubble-random var(--bubble-duration) ease-in-out infinite var(--bubble-delay);
+        }
+
+        @keyframes float-random {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(calc(var(--float-amplitude) * -1px)); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes bubble-random {
+            0% { transform: scale(1); }
+            50% { transform: scale(var(--bubble-scale)); }
+            100% { transform: scale(1); }
+        }
+
+        /* Styles for the emoji icons */
+        .emoji-icon {
+            font-size: 1.5em; /* Default size for mobile */
+            line-height: 1; /* Ensure it aligns well */
+            margin-right: 0.25em; /* Space between icon and text */
+        }
+        @media (min-width: 640px) {
+            .emoji-icon {
+                font-size: 1.8em; /* Larger on sm+ */
+            }
+        }
+        @media (min-width: 768px) {
+            .emoji-icon {
+                font-size: 2em; /* Even larger on md+ */
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-center items-center p-4 liquid-bg overflow-hidden relative">
+    <!-- Animated Wave Elements at the bottom -->
+    <div class="wave-element"></div>
+    <div class="wave-element wave-2"></div>
+    <div class="wave-element wave-3"></div>
+
+    <div class="content-container w-full text-center my-auto md:my-8 px-3 sm:px-4 z-10 mx-auto">
+        <div class="mb-6 sm:mb-10">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/19acfed1-670c-44e0-ab09-ddf68ed01933.png" alt="Friendly water droplet character with sunglasses" class="mx-auto w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 floating liquid-shape object-contain animate__animated animate__bounceInDown">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600 mt-2 sm:mt-6 mb-2 sm:mb-4 animate__animated animate__bounceIn">WELCOME! 💧💦 </h1>
+            <p class="text-base sm:text-lg md:text-xl text-gray-700 mb-4 sm:mb-6 animate__animated animate__fadeIn animate__delay-1s">Let's explore the wonderful world of liquids together!</p>
+        </div>
+
+        <div class="flex flex-wrap justify-center mt-4 sm:mt-6 gap-2 sm:gap-4">
+            <button id="motivationalBtn" class="btn-liquid bubbling animate__animated animate__pulse animate__infinite text-sm sm:text-base md:text-lg">
+                <span class="relative z-10 flex items-center">
+                    <!-- Colorful Sparkle Emoji -->
+                    <span class="emoji-icon">✨</span> MOTIVATION!
+                </span>
+            </button>
+
+            <button id="lessonBtn" class="btn-liquid bubbling animate__animated animate__pulse animate__infinite animate__delay-1s">
+                <span class="relative z-10 flex items-center">
+                    <!-- Colorful Water Wave Emoji -->
+                    <span class="emoji-icon">🌊</span> LESSON!
+                </span>
+            </button>
+        </div>
+
+        <!-- The div containing the image and its paragraph has been removed from here -->
+
+    </div>
+
+    <script>
+        // Create random floating bubbles
+        function createBubbles() {
+            const numBubbles = 25; // Increased number of bubbles
+            for (let i = 0; i < numBubbles; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'absolute bubble bg-white rounded-full';
+
+                // Responsive sizing for bubbles
+                let size = Math.random() * 15 + 5; // Base size for mobile
+                if (window.innerWidth >= 640) { // sm breakpoint
+                    size = Math.random() * 25 + 10;
+                }
+                if (window.innerWidth >= 768) { // md breakpoint
+                    size = Math.random() * 35 + 15;
+                }
+
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.top = Math.random() * 100 + '%';
+                bubble.style.opacity = Math.random() * 0.5 + 0.2; // Varied opacity
+
+                // Custom properties for random animation values
+                bubble.style.setProperty('--float-duration', `${Math.random() * 8 + 4}s`);
+                bubble.style.setProperty('--float-delay', `${Math.random() * 5}s`);
+                bubble.style.setProperty('--float-amplitude', `${Math.random() * 30 + 10}`); // How much it floats up/down
+
+                bubble.style.setProperty('--bubble-duration', `${Math.random() * 3 + 1}s`);
+                bubble.style.setProperty('--bubble-delay', `${Math.random() * 2}s`);
+                bubble.style.setProperty('--bubble-scale', `${Math.random() * 0.2 + 1.05}`); // How much it scales
+
+                document.body.appendChild(bubble);
+            }
+        }
+
+        // Interactive button effects
+        document.getElementById('motivationalBtn').addEventListener('click', function() {
+            // Create a quick splash effect before redirecting
+            for (let i = 0; i < 5; i++) {
+                const splash = document.createElement('div');
+                splash.className = 'absolute bg-blue-200 rounded-full'; // Blue splash
+                splash.style.width = '10px';
+                splash.style.height = '10px';
+                splash.style.left = this.offsetLeft + this.offsetWidth/2 + 'px';
+                splash.style.top = this.offsetTop + 'px';
+                splash.style.transform = `translate(${Math.random() * 50 - 25}px, ${Math.random() * 30 - 60}px) rotate(${Math.random() * 360}deg)`;
+                splash.style.transition = 'all 0.3s ease-out';
+                splash.style.opacity = '1';
+                document.body.appendChild(splash);
+
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    splash.style.transform += ' scale(1.5)';
+                    setTimeout(() => splash.remove(), 300);
+                }, 10);
+            }
+            // Redirect to motivation.html
+            window.location.href = "motivation.html";
+        });
+
+        document.getElementById('lessonBtn').addEventListener('click', function() {
+            // Create a liquid ripple effect
+            const ripple = document.createElement('div');
+            ripple.className = 'absolute bg-blue-300 rounded-full pointer-events-none transform scale-0';
+            ripple.style.width = '10px';
+            ripple.style.height = '10px';
+            ripple.style.left = this.offsetLeft + this.offsetWidth/2 + 'px';
+            ripple.style.top = this.offsetTop + this.offsetHeight/2 + 'px';
+            ripple.style.transformOrigin = 'center';
+            ripple.style.transition = 'all 1s ease-out';
+            document.body.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.style.width = '200px';
+                ripple.style.height = '200px';
+                ripple.style.opacity = '0';
+                ripple.style.transform = 'scale(2)';
+                setTimeout(() => ripple.remove(), 1000);
+            }, 10);
+
+            setTimeout(() => {
+                window.location.href = "#"; // Replace with actual lesson page
+                alert("Hooray! Let's learn about liquids!\n\nDid you know: Liquids don't have a fixed shape, they take the shape of their container!");
+            }, 500);
+        });
+
+        // Initialize
+        window.addEventListener('load', createBubbles);
+        // Re-create bubbles on resize to adjust for new screen size
+        window.addEventListener('resize', () => {
+            // Remove existing bubbles
+            document.querySelectorAll('.bubble').forEach(b => b.remove());
+            createBubbles();
+        });
+    </script>
+</body>
+</html>

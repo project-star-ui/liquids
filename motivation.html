@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💧 Liquid Quest! 💧</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #a0d8e1, #d0f4f7);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #4fc3f7;
+      padding: 20px;
+      color: white;
+      font-size: 2.5em;
+    }
+    .back-arrow {
+      display: inline-block;
+      margin: 20px;
+      font-size: 1.5em;
+      color: #4fc3f7;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .back-arrow:hover {
+      color: #0288d1; /* Change color on hover */
+    }
+    .game-section {
+      margin: 30px auto;
+      max-width: 800px; /* Increased max-width for better desktop view */
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .object {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      background: #81d4fa;
+      color: white;
+      border-radius: 10px;
+      cursor: grab;
+      font-size: 1.5em;
+      animation: float 3s ease-in-out infinite;
+      touch-action: manipulation; /* Ensures draggable items work on mobile */
+    }
+    @keyframes float {
+      0% { transform: translatey(0); }
+      50% { transform: translatey(-10px); }
+      100% { transform: translatey(0); }
+    }
+    .bucket {
+      border: 2px dashed #0288d1;
+      padding: 20px;
+      min-height: 100px;
+      margin: 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      flex: 1; /* Allows buckets to grow equally in flex container */
+    }
+    .buckets-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap; /* Allows buckets to wrap on smaller screens */
+    }
+    .correct {
+      background-color: #aed581 !important;
+    }
+    .wrong {
+      background-color: #ef5350 !important;
+    }
+    #result-message {
+      font-size: 1.4em;
+      margin-top: 20px;
+      color: #333;
+    }
+    #final-info {
+      display: none;
+      background: #fff3e0;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-arrow">👈 Let's Go Back!</a>
+  <header>💧 Liquid Quest! 💧</header>
+
+  <div class="game-section">
+    <p>Drag the items into the correct bucket!</p>
+
+    <div>
+      <div class="object" data-type="liquid">💧 Water</div>
+      <div class="object" data-type="solid">🪨 Rock</div>
+      <div class="object" data-type="liquid">🧃 Juice</div>
+      <div class="object" data-type="solid">🖍️ Crayon</div>
+      <div class="object" data-type="liquid">🥛 Milk</div>
+      <div class="object" data-type="gas">💨 Smoke</div>
+    </div>
+
+    <div class="buckets-container">
+      <div class="bucket" id="liquid-bucket">💧 Liquid Bucket</div>
+      <div class="bucket" id="not-liquid-bucket">🚫 Not Liquid Bucket</div>
+    </div>
+
+    <div id="result-message"></div>
+
+    <div id="final-info">
+      <h3>🎉 Great Job! Now let's learn:</h3>
+      <p>Liquids can flow and take the shape of their container. Examples include water, milk, and juice!</p>
+      <p>They are different from solids (like rocks) and gases (like smoke)!</p>
+    </div>
+  </div>
+
+  <script>
+    const objects = document.querySelectorAll('.object');
+    const liquidBucket = document.getElementById('liquid-bucket');
+    const notLiquidBucket = document.getElementById('not-liquid-bucket');
+    const resultMessage = document.getElementById('result-message');
+    const finalInfo = document.getElementById('final-info');
+    let score = 0;
+    let draggedElement = null;
+
+    objects.forEach(obj => {
+      obj.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', e.target.dataset.type);
+        e.dataTransfer.setData('id', e.target.innerText);
+        draggedElement = e.target; // Store the dragged element
+      });
+
+      // Touch events for mobile
+      obj.addEventListener('touchstart', (e) => {
+        draggedElement = e.target; // Store the dragged element
+        e.target.classList.add('dragging'); // Optional: Add a class for visual feedback
+      });
+
+      obj.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        handleDrop(e, draggedElement);
+        draggedElement.classList.remove('dragging'); // Remove visual feedback
+        draggedElement = null; // Clear the dragged element
+      });
+    });
+
+    function handleDrop(e, element) {
+      const bucketType = e.target.id === 'liquid-bucket' ? 'liquid' : 'not-liquid';
+      const type = element.dataset.type;
+      const id = element.innerText;
+
+      if (element.classList.contains('correct') || element.classList.contains('wrong')) return;
+
+      if ((bucketType === 'liquid' && type === 'liquid') ||
+          (bucketType === 'not-liquid' && type !== 'liquid')) {
+        element.classList.add('correct');
+        resultMessage.textContent = `✅ Correct! "${id}" is ${type}.`;
+        score++;
+      } else {
+        element.classList.add('wrong');
+        resultMessage.textContent = `❌ Oops! "${id}" is not a ${bucketType === 'liquid' ? 'liquid' : 'solid or gas'}.`;
+      }
+
+      if (score === 3) {
+        finalInfo.style.display = 'block';
+      }
+    }
+
+    liquidBucket.addEventListener('dragover', (e) => e.preventDefault());
+    notLiquidBucket.addEventListener('dragover', (e) => e.preventDefault());
+
+    liquidBucket.addEventListener('drop', (e) => {
+      e.preventDefault();
+      handleDrop(e, draggedElement);
+    });
+
+    notLiquidBucket.addEventListener('drop', (e) => {
+      e.preventDefault();
+      handleDrop(e, draggedElement);
+    });
+  </script>
+</body>
+</html>
