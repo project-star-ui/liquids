@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowChart Fun - Learning Made Visual!</title>
+    <script src="https://kit.fontawesome.com/8067e5d854.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #6ECFF6;
+            --secondary: #FF9F1C;
+            --accent: #FF69B4;
+            --dark: #2D3047;
+            --light: #FDFFFC;
+            --success: #2EC4B6;
+            --math-color: #FF69B4;
+            --science-color: #2EC4B6;
+            --reading-color: #FF9F1C;
+            --writing-color: #6ECFF6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', cursive, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #ff9e9e, #a0e7ff, #b3ffbb, #f6ffa0);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-text {
+            text-align: left;
+        }
+
+        .title-with-shadow {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #FF69B4, #6ECFF6, #FF9F1C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .rainbow-text {
+            animation: rainbow 5s ease-in-out infinite;
+            font-weight: bold;
+        }
+
+        @keyframes rainbow {
+            0% { color: #FF69B4; }
+            25% { color: #6ECFF6; }
+            50% { color: #2EC4B6; }
+            75% { color: #FF9F1C; }
+            100% { color: #FF69B4; }
+        }
+        
+        .header-logo {
+            font-size: 4rem; /* Increased size for emoji */
+            line-height: 1; /* Adjust line height for better vertical alignment */
+            animation: bounce 2s infinite, wobble 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(5deg) scale(1.05); }
+            50% { transform: rotate(-5deg) scale(1.1); }
+            75% { transform: rotate(3deg) scale(1.05); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2rem;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: var(--dark);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .intro {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .intro i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .flowchart-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .category {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 15px var(--shine-color);
+        }
+
+        .category-hero {
+            height: 150px;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .category:hover .hero-image {
+            transform: scale(1.1);
+        }
+
+        .sparkles, .bubbles, .flying-pages, .magic-sparkle {
+            animation: floatAndFade 3s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes floatAndFade {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(-20px); opacity: 0; }
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            color: white;
+            background-color: var(--primary);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-title {
+            color: var(--dark);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .flowchart-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            min-width: fit-content;
+            padding: 1rem;
+        }
+
+        .step {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex; /* Use flexbox for icon and text alignment */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .step i {
+            font-size: 1.8rem; /* Slightly larger icons */
+            margin-bottom: 0.5rem;
+            color: var(--primary); /* Will be overridden by JS */
+            transition: transform 0.2s ease;
+        }
+
+        .step:hover i {
+            transform: scale(1.1);
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .step-arrow {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid var(--secondary);
+            opacity: 0.6;
+            margin: 0 auto;
+            animation: pulseArrow 1.5s infinite ease-in-out; /* Animated arrows */
+        }
+
+        @keyframes pulseArrow {
+            0%, 100% { transform: scaleY(1); opacity: 0.6; }
+            50% { transform: scaleY(1.2); opacity: 0.8; }
+        }
+
+        .decision {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, var(--accent), #FFC0CB); /* Gradient for decision */
+        }
+
+        .decision:hover {
+            transform: rotate(45deg) scale(1.08); /* More pronounced hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .decision i {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            transform: rotate(-45deg); /* Counter-rotate icon */
+            color: white;
+        }
+
+        .decision h3 {
+            font-size: 1.1rem;
+            transform: rotate(-45deg); /* Counter-rotate text */
+            margin-bottom: 0.3rem;
+        }
+
+        .branch {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+            margin-top: 20px; /* Space for the connecting line */
+        }
+
+        .branch::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background-color: var(--secondary);
+            animation: drawLine 1s forwards; /* Animation for the line */
+        }
+
+        @keyframes drawLine {
+            0% { height: 0; }
+            100% { height: 20px; }
+        }
+
+        .branch-left, .branch-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .branch-label {
+            font-size: 0.9rem; /* Slightly larger label */
+            color: var(--dark);
+            background-color: rgba(255, 255, 255, 0.9); /* More opaque */
+            padding: 0.3rem 0.7rem; /* More padding */
+            border-radius: 15px; /* More rounded */
+            margin-bottom: -15px;
+            z-index: 1;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icon and text */
+        }
+
+        .selected-category {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .selected-category i {
+            font-size: 2.5rem; /* Larger icon */
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            animation: bounce 1s infinite; /* Animate category icon */
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* New animation for explanation text */
+        @keyframes fadeInPop {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .explanation {
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            color: var(--dark);
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 0.5rem;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            animation: fadeInPop 0.3s ease-out; /* Apply new animation */
+        }
+
+        footer {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+
+            .flowchart-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .category {
+                padding: 1rem;
+            }
+
+            .branch {
+                flex-direction: column;
+            }
+
+            .branch-left, .branch-right {
+                width: 100%;
+            }
+
+            .decision {
+                transform: rotate(0deg);
+                margin: 0 auto;
+            }
+
+            .decision:hover {
+                transform: rotate(0deg) scale(1.05);
+            }
+
+            .decision i {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Flowchart colors - now used for initial setup, JS will randomize */
+        .step-math { border-left: 5px solid var(--math-color); }
+        .step-science { border-left: 5px solid var(--science-color); }
+        .step-reading { border-left: 5px solid var(--reading-color); }
+        .step-writing { border-left: 5px solid var(--writing-color); }
+
+        /* Specific step icon colors (overridden by JS, but good defaults) */
+        .step-math i { color: var(--math-color); }
+        .step-science i { color: var(--science-color); }
+        .step-reading i { color: var(--reading-color); }
+        .step-writing i { color: var(--writing-color); }
+
+        /* New animations for steps when explanation is toggled */
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .step.active-explanation {
+            animation: popIn 0.3s ease-out;
+        }
+
+        /* Custom icons/illustrations for steps */
+        .step .emoji-icon {
+            font-size: 2rem; /* Larger emoji */
+            margin-bottom: 0.5rem;
+            line-height: 1;
+            animation: float 2s infinite alternate; /* Gentle float animation */
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-5px); }
+        }
+
+        /* Specific emoji styles for better visual */
+        .math-emoji { color: #FFD700; } /* Gold for math */
+        .science-emoji { color: #00BFFF; } /* Deep sky blue for science */
+        .reading-emoji { color: #FF6347; } /* Tomato for reading */
+        .writing-emoji { color: #8A2BE2; } /* Blue violet for writing */
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <span class="header-logo" role="img" aria-label="Sparkles">✨</span>
+            <div class="logo-text">
+                <h1 class="title-with-shadow">FlowChart Fun</h1>
+                <p class="subtitle rainbow-text">Visual learning adventures for kids!</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="intro">
+            <i class="fas fa-lightbulb animate-pulse"></i>
+            <p>Hey there, super learner! 🎉 Get ready for an amazing adventure with FlowChart Fun! We'll explore cool ideas using colorful, easy-to-follow maps. Just tap on any fun topic below to start your journey!</p>
+        </section>
+
+        <section class="flowchart-categories">
+            <div class="category" onclick="showFlowchart('math')">
+                <div class="category-hero">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e425c1d1-d5d2-4fda-aa51-cfec594f85e8.png" alt="Colorful math symbols and numbers floating around" class="hero-image">
+                </div>
+                <div class="category-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3 class="category-title">Math Magic</h3>
+                <p>Learn problem solving with colorful math paths</p>
+                <div class="sparkles" style="color: gold; font-size: 1.5rem;">✧ ✦ ✧</div>
+            </div>
+
+            <div class="category" onclick="showFlowchart('science')" style="--shine-color: #2EC4B6">
+                <div class="category-hero">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c282608-d4b3-4d61-b5c3-f4018b604058.png" alt="Fun science experiments with bubbles and test tubes" class="hero-image">
+                </div>
+                <div class="category-icon" style="background-color: var(--success);">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <h3 class="category-title">Science Explorer</h3>
+                <p>Discover science concepts step-by-step</p>
+                <div class="bubbles">🫧 🫧 🫧</div>
+            </div>
+
+            <div class="category" onclick="showFlowchart('reading')" style="--shine-color: #FF9F1C">
+                <div class="category-hero">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f51c2501-8fbf-490c-a675-bf2b34ec1a9b.png" alt="Stack of colorful books with a rainbow" class="hero-image">
+                </div>
+                <div class="category-icon" style="background-color: var(--secondary);">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h3 class="category-title">Reading Rainbow</h3>
+                <p>Follow the reading comprehension journey</p>
+                <div class="flying-pages">📖 ✨ 📚</div>
+            </div>
+
+            <div class="category" onclick="showFlowchart('writing')" style="--shine-color: #FF69B4">
+                <div class="category-hero">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1d6fb003-fdd4-4840-a1fe-59bead579ffb.png" alt="Magic wand writing in a book with sparkling stars" class="hero-image">
+                </div>
+                <div class="category-icon" style="background-color: var(--accent);">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <h3 class="category-title">Writing Wizard</h3>
+                <p>Create awesome stories with our writing map</p>
+                <div class="magic-sparkle">✨ 🪄 ✨</div>
+            </div>
+        </section>
+
+        <section id="math-flowchart" class="flowchart-container">
+            <div class="selected-category">
+                <i class="fas fa-calculator"></i>
+                <h2>Math Problem Solving Flowchart</h2>
+            </div>
+            <div class="flowchart">
+                <div class="step step-math" onclick="toggleExplanation('math1')">
+                    <span class="emoji-icon math-emoji">🤔</span>
+                    <h3>Read the Problem</h3>
+                    <p class="explanation math1" style="display: none;">First, read the whole problem carefully! Look for important numbers and words. 🧐</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-math" onclick="toggleExplanation('math2')">
+                    <span class="emoji-icon math-emoji">🔍</span>
+                    <h3>Find What's Asked</h3>
+                    <p class="explanation math2" style="display: none;">What is the question asking you to find? What's the goal? 🎯</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="decision" onclick="toggleExplanation('math3')">
+                    <i class="fas fa-brain"></i>
+                    <h3>Multiple Steps?</h3>
+                    <p class="explanation math3" style="display: none;">Does this problem need many steps to solve, or just one quick calculation? 💡</p>
+                </div>
+                
+                <div class="branch">
+                    <div class="branch-left">
+                        <div class="branch-label">Yes <span class="emoji-icon">✅</span></div>
+                        <div class="step step-math" onclick="toggleExplanation('math4')">
+                            <span class="emoji-icon math-emoji">🧩</span>
+                            <h3>Break It Down</h3>
+                            <p class="explanation math4" style="display: none;">Divide the big problem into smaller, easier parts! Solve them one by one. 🪜</p>
+                        </div>
+                    </div>
+                    <div class="branch-right">
+                        <div class="branch-label">No <span class="emoji-icon">❌</span></div>
+                        <div class="step step-math" onclick="toggleExplanation('math5')">
+                            <span class="emoji-icon math-emoji">⚡</span>
+                            <h3>Solve Directly</h3>
+                            <p class="explanation math5" style="display: none;">You can solve this in just one step! Use your math superpowers! 💪</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="science-flowchart" class="flowchart-container" style="display: none;">
+            <div class="selected-category">
+                <i class="fas fa-flask"></i>
+                <h2>Science Experiment Flowchart</h2>
+            </div>
+            <div class="flowchart">
+                <div class="step step-science" onclick="toggleExplanation('science1')">
+                    <span class="emoji-icon science-emoji">❓</span>
+                    <h3>Question</h3>
+                    <p class="explanation science1" style="display: none;">What do you want to find out? What makes you curious? 🤔</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-science" onclick="toggleExplanation('science2')">
+                    <span class="emoji-icon science-emoji">📚</span>
+                    <h3>Research</h3>
+                    <p class="explanation science2" style="display: none;">Learn about your topic first! Read books, ask questions, or watch videos. 📖</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-science" onclick="toggleExplanation('science3')">
+                    <span class="emoji-icon science-emoji">💡</span>
+                    <h3>Hypothesis</h3>
+                    <p class="explanation science3" style="display: none;">What do you think will happen? Make an educated guess! 🧪</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-science" onclick="toggleExplanation('science4')">
+                    <span class="emoji-icon science-emoji">🔬</span>
+                    <h3>Experiment</h3>
+                    <p class="explanation science4" style="display: none;">Time to test your ideas! Follow your plan carefully. 👩‍🔬👨‍🔬</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-science" onclick="toggleExplanation('science5')">
+                    <span class="emoji-icon science-emoji">📊</span>
+                    <h3>Results</h3>
+                    <p class="explanation science5" style="display: none;">What did you discover? Write down or draw what happened! 📝</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-science" onclick="toggleExplanation('science6')">
+                    <span class="emoji-icon science-emoji">🎉</span>
+                    <h3>Conclusion</h3>
+                    <p class="explanation science6" style="display: none;">What did you learn from this? Did your hypothesis match your results? ✨</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="reading-flowchart" class="flowchart-container" style="display: none;">
+            <div class="selected-category">
+                <i class="fas fa-book-open"></i>
+                <h2>Reading Comprehension Flowchart</h2>
+            </div>
+            <div class="flowchart">
+                <div class="step step-reading" onclick="toggleExplanation('reading1')">
+                    <span class="emoji-icon reading-emoji">👀</span>
+                    <h3>Preview</h3>
+                    <p class="explanation reading1" style="display: none;">Look at titles, pictures, and headings first! Get ready to read! 🖼️</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-reading" onclick="toggleExplanation('reading2')">
+                    <span class="emoji-icon reading-emoji">📖</span>
+                    <h3>Read</h3>
+                    <p class="explanation reading2" style="display: none;">Read the story carefully! Imagine the characters and setting. 🧚‍♀️</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="decision" onclick="toggleExplanation('reading3')">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Understand?</h3>
+                    <p class="explanation reading3" style="display: none;">Do you understand what you read? Can you tell someone about it? 🤔</p>
+                </div>
+                
+                <div class="branch">
+                    <div class="branch-left">
+                        <div class="branch-label">No <span class="emoji-icon">🤷‍♀️</span></div>
+                        <div class="step step-reading" onclick="toggleExplanation('reading4')">
+                            <span class="emoji-icon reading-emoji">⏪</span>
+                            <h3>Re-read</h3>
+                            <p class="explanation reading4" style="display: none;">Try reading it again slowly! Look for clues or ask for help. 🕵️‍♀️</p>
+                        </div>
+                    </div>
+                    <div class="branch-right">
+                        <div class="branch-label">Yes <span class="emoji-icon">👍</span></div>
+                        <div class="step step-reading" onclick="toggleExplanation('reading5')">
+                            <span class="emoji-icon reading-emoji">🧠</span>
+                            <h3>Think Deeper</h3>
+                            <p class="explanation reading5" style="display: none;">What's the main idea? What did you learn? How did the characters feel? 💖</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="writing-flowchart" class="flowchart-container" style="display: none;">
+            <div class="selected-category">
+                <i class="fas fa-pen-fancy"></i>
+                <h2>Story Writing Flowchart</h2>
+            </div>
+            <div class="flowchart">
+                <div class="step step-writing" onclick="toggleExplanation('writing1')">
+                    <span class="emoji-icon writing-emoji">💭</span>
+                    <h3>Brainstorm</h3>
+                    <p class="explanation writing1" style="display: none;">Let your imagination run wild! Think of cool ideas for your story. 🌈</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-writing" onclick="toggleExplanation('writing2')">
+                    <span class="emoji-icon writing-emoji">🎭</span>
+                    <h3>Characters</h3>
+                    <p class="explanation writing2" style="display: none;">Who is in your story? Give them fun names and personalities! 🦸‍♂️🦹‍♀️</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="step step-writing" onclick="toggleExplanation('writing3')">
+                    <span class="emoji-icon writing-emoji">🗺️</span>
+                    <h3>Setting</h3>
+                    <p class="explanation writing3" style="display: none;">Where does your story happen? A magical forest? A space station? 🚀🌳</p>
+                </div>
+                <div class="step-arrow"></div>
+                
+                <div class="decision" onclick="toggleExplanation('writing4')">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Problem?</h3>
+                    <p class="explanation writing4" style="display: none;">What goes wrong in your story? Every good story needs a challenge! 🚧</p>
+                </div>
+                
+                <div class="branch">
+                    <div class="branch-left">
+                        <div class="branch-label">Adventure <span class="emoji-icon">⚔️</span></div>
+                        <div class="step step-writing" onclick="toggleExplanation('writing5')">
+                            <span class="emoji-icon writing-emoji">💥</span>
+                            <h3>Action</h3>
+                            <p class="explanation writing5" style="display: none;">Exciting things happen! Characters go on a quest or face a big challenge! 🐉</p>
+                        </div>
+                    </div>
+                    <div class="branch-right">
+                        <div class="branch-label">Everyday <span class="emoji-icon">🏡</span></div>
+                        <div class="step step-writing" onclick="toggleExplanation('writing6')">
+                            <span class="emoji-icon writing-emoji">✨</span>
+                            <h3>Solution</h3>
+                            <p class="explanation writing6" style="display: none;">How is the problem fixed? How do your characters solve it? 🌟</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Made with <i class="fas fa-heart" style="color: var(--accent);"></i> for kids who love to learn visually!</p>
+    </footer>
+
+    <script>
+        function showFlowchart(category) {
+            // Hide all flowcharts
+            document.querySelectorAll('.flowchart-container').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected flowchart
+            document.getElementById(`${category}-flowchart`).style.display = 'block';
+            
+            // Scroll to the selected flowchart
+            document.getElementById(`${category}-flowchart`).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleExplanation(id) {
+            const explanation = document.querySelector(`.explanation.${id}`);
+            const stepElement = explanation.closest('.step') || explanation.closest('.decision'); // Get the parent step/decision
+            
+            if (explanation.style.display === 'none' || !explanation.style.display) {
+                explanation.style.display = 'block';
+                if (stepElement) {
+                    stepElement.classList.add('active-explanation'); // Add class for animation
+                }
+                
+                // Close other explanations in the same flowchart
+                const parentFlowchart = explanation.closest('.flowchart-container');
+                parentFlowchart.querySelectorAll('.explanation').forEach(el => {
+                    if (el !== explanation) {
+                        el.style.display = 'none';
+                        const otherStep = el.closest('.step') || el.closest('.decision');
+                        if (otherStep) {
+                            otherStep.classList.remove('active-explanation'); // Remove class from others
+                        }
+                    }
+                });
+            } else {
+                explanation.style.display = 'none';
+                if (stepElement) {
+                    stepElement.classList.remove('active-explanation'); // Remove class
+                }
+            }
+        }
+
+        // Add mouse tracking sparkle effect
+        document.addEventListener('mousemove', function(e) {
+            if (Math.random() > 0.95) { // only create sparkles sometimes
+                const sparkle = document.createElement('div');
+                sparkle.style.position = 'fixed';
+                sparkle.style.width = '10px';
+                sparkle.style.height = '10px';
+                sparkle.style.left = `${e.pageX}px`;
+                sparkle.style.top = `${e.pageY}px`;
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.background = 'radial-gradient(circle, white, gold, transparent)';
+                sparkle.style.borderRadius = '50%';
+                sparkle.style.animation = 'sparkleFade 1s forwards';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        });
+
+        // Add keyframes for sparkle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkleFade {
+                0% { transform: scale(0); opacity: 0.8; }
+                50% { transform: scale(1); opacity: 1; }
+                100% { transform: scale(0); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Randomize colors of steps on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.step');
+            const colors = ['#FF69B4', '#6ECFF6', '#2EC4B6', '#FF9F1C', '#DDA0DD']; // Original colors
+            
+            steps.forEach(step => {
+                // Keep the original category-specific border colors
+                let stepColor;
+                if (step.classList.contains('step-math')) stepColor = 'var(--math-color)';
+                else if (step.classList.contains('step-science')) stepColor = 'var(--science-color)';
+                else if (step.classList.contains('step-reading')) stepColor = 'var(--reading-color)';
+                else if (step.classList.contains('step-writing')) stepColor = 'var(--writing-color)';
+                else stepColor = colors[Math.floor(Math.random() * colors.length)]; // Fallback for other steps
+
+                step.style.borderLeftColor = stepColor;
+                const icon = step.querySelector('i');
+                if (icon) {
+                    icon.style.color = stepColor;
+                }
+            });
+            
+            // Default to showing math flowchart
+            showFlowchart('math');
+        });
+
+        // Add interactive background elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const backgroundShapes = ['circle', 'square', 'triangle', 'star'];
+            const colors = ['rgba(110, 207, 246, 0.3)', 'rgba(255, 159, 28, 0.3)', 
+                           'rgba(255, 105, 180, 0.3)', 'rgba(46, 196, 182, 0.3)'];
+            
+            // Create 20 floating background shapes
+            for (let i = 0; i < 20; i++) {
+                const shape = document.createElement('div');
+                shape.style.position = 'fixed';
+                shape.style.width = `${Math.random() * 100 + 50}px`;
+                shape.style.height = shape.style.width;
+                shape.style.left = `${Math.random() * 100}vw`;
+                shape.style.top = `${Math.random() * 100}vh`;
+                shape.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                shape.style.borderRadius = backgroundShapes[Math.floor(Math.random() * backgroundShapes.length)] === 'circle' ? '50%' : '0';
+                shape.style.zIndex = '-1';
+                shape.style.opacity = '0.4';
+                shape.style.animation = `floatBackground ${Math.random() * 20 + 10}s infinite ease-in-out`; /* Unique animation name */
+                
+                document.body.appendChild(shape);
+            }
+
+            // Define floatBackground animation
+            const floatBgStyle = document.createElement('style');
+            floatBgStyle.textContent = `
+                @keyframes floatBackground {
+                    0%, 100% { transform: translateY(0) translateX(0); }
+                    25% { transform: translateY(-15px) translateX(10px); }
+                    50% { transform: translateY(0px) translateX(-10px); }
+                    75% { transform: translateY(15px) translateX(5px); }
+                }
+            `;
+            document.head.appendChild(floatBgStyle);
+        });
+    </script>
+</body>
+</html>
