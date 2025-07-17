@@ -61,7 +61,7 @@
         }
 
         .logo-text {
-            text-align: left;
+            text-align: left; /* Default for larger screens */
         }
 
         .title-with-shadow {
@@ -294,7 +294,7 @@
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             position: relative;
-            transform: rotate(45deg);
+            /* Removed transform: rotate(45deg); */
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -304,20 +304,20 @@
         }
 
         .decision:hover {
-            transform: rotate(45deg) scale(1.08); /* More pronounced hover */
+            transform: scale(1.08); /* Adjusted hover for no rotation */
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
         .decision i {
             font-size: 1.8rem;
             margin-bottom: 0.5rem;
-            transform: rotate(-45deg); /* Counter-rotate icon */
+            /* Removed transform: rotate(-45deg); */
             color: white;
         }
 
         .decision h3 {
             font-size: 1.1rem;
-            transform: rotate(-45deg); /* Counter-rotate text */
+            /* Removed transform: rotate(-45deg); */
             margin-bottom: 0.3rem;
         }
 
@@ -429,6 +429,11 @@
 
             .subtitle {
                 font-size: 0.9rem;
+            }
+
+            /* Added to center the logo text on mobile */
+            .logo-text {
+                text-align: center;
             }
 
             .flowchart-categories {
@@ -595,6 +600,7 @@
                     <h3>Multiple Steps?</h3>
                     <p class="explanation math3" style="display: none;">Does this problem need many steps to solve, or just one quick calculation? 💡</p>
                 </div>
+                <div class="step-arrow"></div> <!-- Added arrow after decision box -->
                 
                 <div class="branch">
                     <div class="branch-left">
@@ -691,6 +697,7 @@
                     <h3>Understand?</h3>
                     <p class="explanation reading3" style="display: none;">Do you understand what you read? Can you tell someone about it? 🤔</p>
                 </div>
+                <div class="step-arrow"></div> <!-- Added arrow after decision box -->
                 
                 <div class="branch">
                     <div class="branch-left">
@@ -745,6 +752,7 @@
                     <h3>Problem?</h3>
                     <p class="explanation writing4" style="display: none;">What goes wrong in your story? Every good story needs a challenge! 🚧</p>
                 </div>
+                <div class="step-arrow"></div> <!-- Added arrow after decision box -->
                 
                 <div class="branch">
                     <div class="branch-left">
