@@ -6,7 +6,7 @@
   <title>💧 Liquid Quest! 💧</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-family: 'Arial', sans-serif; /* Changed font for better readability */
       background: linear-gradient(to bottom, #a0d8e1, #d0f4f7);
       margin: 0;
       padding: 0;
@@ -86,6 +86,25 @@
       margin-top: 20px;
       border-radius: 10px;
       font-size: 1.1em;
+    }
+
+    /* Media Query for Mobile Devices */
+    @media (max-width: 600px) {
+      body {
+        font-family: 'Verdana', sans-serif; /* More readable font for mobile */
+      }
+      header {
+        font-size: 2em; /* Slightly smaller header font size for mobile */
+      }
+      .object {
+        font-size: 1.2em; /* Adjust object font size for mobile */
+      }
+      #result-message {
+        font-size: 1.2em; /* Adjust result message font size for mobile */
+      }
+      #final-info {
+        font-size: 1em; /* Adjust final info font size for mobile */
+      }
     }
   </style>
 </head>
