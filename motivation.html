@@ -1,207 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>💧 Liquid Quest! 💧</title>
-  <style>
+<meta charset="UTF-8">
+<title>Liquid or Not? - Drag and Drop Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(to bottom, #e0f7fa, #b2ebf2); /* Water-like gradient */
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+h1 {
+    color: #00796b;
+    font-size: 2.5em; /* Increased font size for better readability */
+    text-shadow: 1px 1px 2px #ffffff; /* Added shadow for a playful effect */
+}
+
+p {
+    font-size: 1.5em; /* Increased font size for better readability */
+    color: #004d40; /* Darker color for better contrast */
+}
+
+#game-area {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+    position: relative; /* Position relative for bubble positioning */
+}
+
+.bucket {
+    border: 3px dashed #00796b;
+    border-radius: 15px;
+    width: 45%;
+    min-height: 250px;
+    padding: 10px;
+    background-color: rgba(178, 223, 219, 0.8); /* Semi-transparent bucket */
+    box-sizing: border-box;
+    flex-grow: 1;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.bucket:hover {
+    background-color: rgba(167, 255, 235, 0.8); /* Lighten bucket on hover */
+}
+
+.bucket h2 {
+    font-size: 1.8em; /* Increased font size for better readability */
+    color: #004d40;
+    margin-top: 0;
+}
+
+.item {
+    background-color: #fff59d;
+    border: 2px solid #fbc02d;
+    border-radius: 10px;
+    padding: 15px 20px; /* Increased padding for better touch targets */
+    margin: 10px auto;
+    width: fit-content;
+    max-width: 90%;
+    cursor: grab;
+    font-size: 1.5em; /* Increased font size for better readability */
+    position: relative;
+    touch-action: none;
+    z-index: 1000;
+    transition: transform 0.2s; /* Smooth transition for drag effect */
+}
+
+.item:active {
+    transform: scale(1.05); /* Slightly enlarge item when dragging */
+}
+
+.correct {
+    background-color: #c8e6c9;
+    border-color: #388e3c;
+}
+
+.incorrect {
+    background-color: #ffcdd2;
+    border-color: #d32f2f;
+}
+
+#items-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#message {
+    margin-top: 30px;
+    font-size: 1.5em; /* Increased font size for better readability */
+    color: #388e3c;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.bubble {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: float 6s infinite; /* Bubble floating animation */
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Back Button Styles and Animations */
+#backButton {
+    position: fixed; /* Fixed position so it stays visible */
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(90deg, #ff9a8b 0%, #ff6a88 100%); /* Playful gradient */
+    color: white;
+    border: none;
+    border-radius: 50px; /* Super rounded */
+    padding: 12px 25px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 106, 136, 0.6);
+    transition: all 0.3s ease;
+    z-index: 1001; /* Ensure it's above other elements */
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between text and emoji */
+    animation: pulse-grow 2s infinite alternate; /* Continuous pulse */
+}
+
+#backButton:hover {
+    transform: translateY(-3px) scale(1.05); /* Lift and slightly enlarge on hover */
+    box-shadow: 0 6px 20px rgba(255, 106, 136, 0.8);
+    animation: bounce-hover 0.5s ease-in-out; /* Bounce on hover */
+}
+
+#backButton:active {
+    transform: translateY(1px); /* Press effect */
+}
+
+/* Keyframes for back button animations */
+@keyframes pulse-grow {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.03); }
+}
+
+@keyframes bounce-hover {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-5px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-2px); }
+}
+
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7); /* White ripple */
+    animation: ripple-animation 0.6s forwards;
+    transform: scale(0);
+    opacity: 1;
+    pointer-events: none; /* Ensure it doesn't block clicks */
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(2.5); /* Expand ripple */
+        opacity: 0; /* Fade out */
+    }
+}
+
+
+@media (max-width: 768px) {
     body {
-      font-family: 'Arial', sans-serif; /* Changed font for better readability */
-      background: linear-gradient(to bottom, #a0d8e1, #d0f4f7);
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    header {
-      background-color: #4fc3f7;
-      padding: 20px;
-      color: white;
-      font-size: 2.5em;
-    }
-    .back-arrow {
-      display: inline-block;
-      margin: 20px;
-      font-size: 1.5em;
-      color: #4fc3f7;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .back-arrow:hover {
-      color: #0288d1; /* Change color on hover */
-    }
-    .game-section {
-      margin: 30px auto;
-      max-width: 800px; /* Increased max-width for better desktop view */
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
-    .object {
-      display: inline-block;
-      margin: 10px;
-      padding: 10px 20px;
-      background: #81d4fa;
-      color: white;
-      border-radius: 10px;
-      cursor: grab;
-      font-size: 1.5em;
-      animation: float 3s ease-in-out infinite;
-      touch-action: manipulation; /* Ensures draggable items work on mobile */
-    }
-    @keyframes float {
-      0% { transform: translatey(0); }
-      50% { transform: translatey(-10px); }
-      100% { transform: translatey(0); }
-    }
-    .bucket {
-      border: 2px dashed #0288d1;
-      padding: 20px;
-      min-height: 100px;
-      margin: 20px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      flex: 1; /* Allows buckets to grow equally in flex container */
-    }
-    .buckets-container {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap; /* Allows buckets to wrap on smaller screens */
-    }
-    .correct {
-      background-color: #aed581 !important;
-    }
-    .wrong {
-      background-color: #ef5350 !important;
-    }
-    #result-message {
-      font-size: 1.4em;
-      margin-top: 20px;
-      color: #333;
-    }
-    #final-info {
-      display: none;
-      background: #fff3e0;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 10px;
-      font-size: 1.1em;
+        overflow-y: auto; /* Allow vertical scrolling on mobile */
     }
 
-    /* Media Query for Mobile Devices */
-    @media (max-width: 600px) {
-      body {
-        font-family: 'Verdana', sans-serif; /* More readable font for mobile */
-      }
-      header {
-        font-size: 2em; /* Slightly smaller header font size for mobile */
-      }
-      .object {
-        font-size: 1.2em; /* Adjust object font size for mobile */
-      }
-      #result-message {
-        font-size: 1.2em; /* Adjust result message font size for mobile */
-      }
-      #final-info {
-        font-size: 1em; /* Adjust final info font size for mobile */
-      }
+    .bucket {
+        width: 90%;
     }
-  </style>
+
+    h1 {
+        font-size: 2em; /* Adjusted for mobile */
+    }
+
+    p {
+        font-size: 1.2em; /* Adjusted for mobile */
+    }
+
+    .item {
+        font-size: 1.4em; /* Adjusted for mobile */
+    }
+
+    #game-area {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #backButton {
+        top: 10px;
+        left: 10px;
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+}
+</style>
 </head>
 <body>
-  <a href="index.html" class="back-arrow">👈 Let's Go Back!</a>
-  <header>💧 Liquid Quest! 💧</header>
 
-  <div class="game-section">
-    <p>Drag the items into the correct bucket!</p>
+<button id="backButton">Go Back Home! 🏠</button>
 
-    <div>
-      <div class="object" data-type="liquid">💧 Water</div>
-      <div class="object" data-type="solid">🪨 Rock</div>
-      <div class="object" data-type="liquid">🧃 Juice</div>
-      <div class="object" data-type="solid">🖍️ Crayon</div>
-      <div class="object" data-type="liquid">🥛 Milk</div>
-      <div class="object" data-type="gas">💨 Smoke</div>
+<h1>🧪 Liquid or Not? 🪣</h1>
+<p>Drag each item into the correct bucket!</p>
+
+<div id="game-area">
+    <div class="bucket" id="liquid-bucket">
+        <h2>💧 Liquid</h2>
     </div>
-
-    <div class="buckets-container">
-      <div class="bucket" id="liquid-bucket">💧 Liquid Bucket</div>
-      <div class="bucket" id="not-liquid-bucket">🚫 Not Liquid Bucket</div>
+    <div class="bucket" id="not-liquid-bucket">
+        <h2>🪨 Not Liquid</h2>
     </div>
+</div>
 
-    <div id="result-message"></div>
+<div id="items-container"></div>
 
-    <div id="final-info">
-      <h3>🎉 Great Job! Now let's learn:</h3>
-      <p>Liquids can flow and take the shape of their container. Examples include water, milk, and juice!</p>
-      <p>They are different from solids (like rocks) and gases (like smoke)!</p>
-    </div>
-  </div>
+<div id="message" class="hidden"></div>
 
-  <script>
-    const objects = document.querySelectorAll('.object');
+<div id="bubbles-container"></div> <!-- Container for bubbles -->
+
+<script>
+const items = [
+    { name: 'Water 💧', isLiquid: true },
+    { name: 'Milk 🥛', isLiquid: true },
+    { name: 'Juice 🧃', isLiquid: true },
+    { name: 'Oil 🛢️', isLiquid: true },
+    { name: 'Honey 🍯', isLiquid: true },
+    { name: 'Soda 🥤', isLiquid: true },
+    { name: 'Shampoo 🧴', isLiquid: true },
+    { name: 'Glue 🧷', isLiquid: true },
+    { name: 'Rain 🌧️', isLiquid: true },
+    { name: 'Soup 🍲', isLiquid: true },
+    { name: 'Ice 🧊', isLiquid: false },
+    { name: 'Rock 🪨', isLiquid: false },
+    { name: 'Pencil ✏️', isLiquid: false },
+    { name: 'Book 📖', isLiquid: false },
+    { name: 'Chair 🪑', isLiquid: false }
+];
+
+let currentItem = null;
+let offsetX = 0;
+let offsetY = 0;
+
+function isInside(dropZone, item) {
+    const dz = dropZone.getBoundingClientRect();
+    const it = item.getBoundingClientRect();
+    return (
+        it.left + it.width / 2 > dz.left &&
+        it.left + it.width / 2 < dz.right &&
+        it.top + it.height / 2 > dz.top &&
+        it.top + it.height / 2 < dz.bottom
+    );
+}
+
+function startDrag(e) {
+    if (e.type === 'touchstart') {
+        currentItem = e.target;
+        offsetX = e.touches[0].clientX - currentItem.getBoundingClientRect().left;
+        offsetY = e.touches[0].clientY - currentItem.getBoundingClientRect().top;
+    } else {
+        currentItem = e.target;
+        offsetX = e.clientX - currentItem.getBoundingClientRect().left;
+        offsetY = e.clientY - currentItem.getBoundingClientRect().top;
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', endDrag);
+    }
+    currentItem.style.position = 'fixed';
+    currentItem.style.zIndex = '1000';
+}
+
+function drag(e) {
+    if (!currentItem) return;
+    e.preventDefault();
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    const x = clientX - offsetX;
+    const y = clientY - offsetY;
+    currentItem.style.left = x + 'px';
+    currentItem.style.top = y + 'px';
+}
+
+function endDrag(e) {
+    if (!currentItem) return;
+
     const liquidBucket = document.getElementById('liquid-bucket');
-    const notLiquidBucket = document.getElementById('not-liquid-bucket');
-    const resultMessage = document.getElementById('result-message');
-    const finalInfo = document.getElementById('final-info');
-    let score = 0;
-    let draggedElement = null;
+    const solidBucket = document.getElementById('not-liquid-bucket');
 
-    objects.forEach(obj => {
-      obj.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', e.target.dataset.type);
-        e.dataTransfer.setData('id', e.target.innerText);
-        draggedElement = e.target; // Store the dragged element
-      });
-
-      // Touch events for mobile
-      obj.addEventListener('touchstart', (e) => {
-        draggedElement = e.target; // Store the dragged element
-        e.target.classList.add('dragging'); // Optional: Add a class for visual feedback
-      });
-
-      obj.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        handleDrop(e, draggedElement);
-        draggedElement.classList.remove('dragging'); // Remove visual feedback
-        draggedElement = null; // Clear the dragged element
-      });
-    });
-
-    function handleDrop(e, element) {
-      const bucketType = e.target.id === 'liquid-bucket' ? 'liquid' : 'not-liquid';
-      const type = element.dataset.type;
-      const id = element.innerText;
-
-      if (element.classList.contains('correct') || element.classList.contains('wrong')) return;
-
-      if ((bucketType === 'liquid' && type === 'liquid') ||
-          (bucketType === 'not-liquid' && type !== 'liquid')) {
-        element.classList.add('correct');
-        resultMessage.textContent = `✅ Correct! "${id}" is ${type}.`;
-        score++;
-      } else {
-        element.classList.add('wrong');
-        resultMessage.textContent = `❌ Oops! "${id}" is not a ${bucketType === 'liquid' ? 'liquid' : 'solid or gas'}.`;
-      }
-
-      if (score === 3) {
-        finalInfo.style.display = 'block';
-      }
+    if (isInside(liquidBucket, currentItem)) {
+        liquidBucket.appendChild(currentItem);
+        currentItem.dataset.bucket = 'liquid-bucket';
+    } else if (isInside(solidBucket, currentItem)) {
+        solidBucket.appendChild(currentItem);
+        currentItem.dataset.bucket = 'not-liquid-bucket';
     }
 
-    liquidBucket.addEventListener('dragover', (e) => e.preventDefault());
-    notLiquidBucket.addEventListener('dragover', (e) => e.preventDefault());
+    currentItem.style.position = 'relative';
+    currentItem.style.left = 'unset';
+    currentItem.style.top = 'unset';
+    currentItem.style.zIndex = '1';
 
-    liquidBucket.addEventListener('drop', (e) => {
-      e.preventDefault();
-      handleDrop(e, draggedElement);
+    if (e.type === 'mouseup') {
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', endDrag);
+    }
+
+    currentItem = null;
+    checkIfAllPlaced();
+}
+
+function checkIfAllPlaced() {
+    const allItems = document.querySelectorAll('.item');
+    let placedCount = 0;
+
+    allItems.forEach(item => {
+        if (item.dataset.bucket) {
+            placedCount++;
+        }
     });
 
-    notLiquidBucket.addEventListener('drop', (e) => {
-      e.preventDefault();
-      handleDrop(e, draggedElement);
+    if (placedCount === items.length) {
+        evaluateResults();
+    }
+}
+
+function evaluateResults() {
+    const allItems = document.querySelectorAll('.item');
+    let correctCount = 0;
+
+    allItems.forEach(item => {
+        const itemData = items.find(i => i.name === item.textContent.trim());
+        const placedBucket = item.dataset.bucket;
+        const correctBucket = itemData.isLiquid ? 'liquid-bucket' : 'not-liquid-bucket';
+
+        if (placedBucket === correctBucket) {
+            item.classList.add('correct');
+            correctCount++;
+        } else {
+            item.classList.add('incorrect');
+        }
     });
-  </script>
+
+    const message = document.getElementById('message');
+    message.classList.remove('hidden');
+
+    if (correctCount === items.length) {
+        message.innerHTML = `
+            🎉 Hooray! You did it, Science Star! 🌈<br>
+            All items are sorted perfectly.<br><br>
+            🧠 You're ready to learn about the <b>Liquid State of Matter</b>!
+        `;
+    } else {
+        message.innerHTML = `
+            😊 Great try, friend! You're learning fast! 💡<br>
+            Some items were in the wrong bucket, but that’s okay!<br><br>
+            ✅ Liquids can flow and take the shape of a container.<br>
+            ❌ Solids like rocks and books stay the same shape.<br><br>
+            📘 Let’s explore more about the <b>Liquid State of Matter</b> together!
+        `;
+    }
+}
+
+function createItems() {
+    const container = document.getElementById('items-container');
+    items.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.id = 'item-' + index;
+        div.textContent = item.name;
+
+        // Touch
+        div.addEventListener('touchstart', startDrag, { passive: false });
+        div.addEventListener('touchmove', drag, { passive: false });
+        div.addEventListener('touchend', endDrag);
+
+        // Mouse
+        div.addEventListener('mousedown', startDrag);
+
+        container.appendChild(div);
+    });
+}
+
+function createBubbles() {
+    const bubblesContainer = document.getElementById('bubbles-container');
+    for (let i = 0; i < 10; i++) { // Create 10 bubbles
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = Math.random() * 50 + 20; // Random size between 20 and 70
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+        bubble.style.bottom = Math.random() * 100 + 'vh'; // Random vertical position
+        bubble.style.animationDuration = (Math.random() * 3 + 3) + 's'; // Random float duration
+        bubblesContainer.appendChild(bubble);
+    }
+}
+
+// Back button functionality
+document.getElementById('backButton').addEventListener('click', function(e) {
+    const button = this;
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple-effect');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    button.appendChild(ripple);
+
+    // Remove the ripple element after the animation
+    ripple.addEventListener('animationend', () => {
+        ripple.remove();
+    });
+
+    // Redirect after a short delay to allow animation to start
+    setTimeout(() => {
+        window.location.href = "index.html";
+    }, 300); // Adjust delay as needed for animation
+});
+
+
+createItems();
+createBubbles(); // Call to create bubbles
+</script>
+
 </body>
 </html>
