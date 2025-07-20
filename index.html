@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,6 +190,33 @@
                 font-size: 2em; /* Even larger on md+ */
             }
         }
+
+        /* New animation for button click effects */
+        @keyframes sparkle-burst {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute;
+            background-color: yellow;
+            border-radius: 50%;
+            animation: sparkle-burst 0.6s ease-out forwards;
+            filter: blur(1px);
+        }
+
+        @keyframes water-ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .ripple-effect {
+            position: absolute;
+            background-color: rgba(100, 198, 255, 0.7);
+            border-radius: 50%;
+            animation: water-ripple 0.8s ease-out forwards;
+            filter: blur(2px);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-center items-center p-4 liquid-bg overflow-hidden relative">
@@ -263,53 +291,47 @@
 
         // Interactive button effects
         document.getElementById('motivationalBtn').addEventListener('click', function() {
-            // Create a quick splash effect before redirecting
-            for (let i = 0; i < 5; i++) {
-                const splash = document.createElement('div');
-                splash.className = 'absolute bg-blue-200 rounded-full'; // Blue splash
-                splash.style.width = '10px';
-                splash.style.height = '10px';
-                splash.style.left = this.offsetLeft + this.offsetWidth/2 + 'px';
-                splash.style.top = this.offsetTop + 'px';
-                splash.style.transform = `translate(${Math.random() * 50 - 25}px, ${Math.random() * 30 - 60}px) rotate(${Math.random() * 360}deg)`;
-                splash.style.transition = 'all 0.3s ease-out';
-                splash.style.opacity = '1';
-                document.body.appendChild(splash);
+            const button = this;
+            const rect = button.getBoundingClientRect();
 
-                setTimeout(() => {
-                    splash.style.opacity = '0';
-                    splash.style.transform += ' scale(1.5)';
-                    setTimeout(() => splash.remove(), 300);
-                }, 10);
+            // Create multiple sparkle effects
+            for (let i = 0; i < 10; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                const size = Math.random() * 10 + 5; // Random size for sparkles
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                sparkle.style.left = `${rect.left + rect.width / 2 + (Math.random() - 0.5) * rect.width}px`;
+                sparkle.style.top = `${rect.top + rect.height / 2 + (Math.random() - 0.5) * rect.height}px`;
+                document.body.appendChild(sparkle);
+                sparkle.addEventListener('animationend', () => sparkle.remove());
             }
-            // Redirect to motivation.html
-            window.location.href = "motivation.html";
+
+            // Redirect after a short delay to let animation play
+            setTimeout(() => {
+                window.location.href = "motivation.html";
+            }, 300); // Adjust delay as needed
         });
 
         document.getElementById('lessonBtn').addEventListener('click', function() {
-            // Create a liquid ripple effect
+            const button = this;
+            const rect = button.getBoundingClientRect();
+
+            // Create a larger ripple effect
             const ripple = document.createElement('div');
-            ripple.className = 'absolute bg-blue-300 rounded-full pointer-events-none transform scale-0';
+            ripple.className = 'ripple-effect';
             ripple.style.width = '10px';
             ripple.style.height = '10px';
-            ripple.style.left = this.offsetLeft + this.offsetWidth/2 + 'px';
-            ripple.style.top = this.offsetTop + this.offsetHeight/2 + 'px';
-            ripple.style.transformOrigin = 'center';
-            ripple.style.transition = 'all 1s ease-out';
+            ripple.style.left = `${rect.left + rect.width / 2}px`;
+            ripple.style.top = `${rect.top + rect.height / 2}px`;
+            ripple.style.transform = 'translate(-50%, -50%) scale(0)'; // Center the ripple
             document.body.appendChild(ripple);
+            ripple.addEventListener('animationend', () => ripple.remove());
 
+            // Redirect after a short delay to let animation play
             setTimeout(() => {
-                ripple.style.width = '200px';
-                ripple.style.height = '200px';
-                ripple.style.opacity = '0';
-                ripple.style.transform = 'scale(2)';
-                setTimeout(() => ripple.remove(), 1000);
-            }, 10);
-
-            setTimeout(() => {
-                window.location.href = "#"; // Replace with actual lesson page
-                alert("Hooray! Let's learn about liquids!\n\nDid you know: Liquids don't have a fixed shape, they take the shape of their container!");
-            }, 500);
+                window.location.href = "lesson.html"; // Link to lesson.html
+            }, 500); // Adjust delay as needed
         });
 
         // Initialize
