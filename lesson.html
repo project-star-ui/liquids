@@ -44,6 +44,7 @@
       border: 5px dashed #1e90ff;
       cursor: pointer;
       position: relative; /* Needed for absolute positioning of hover-popup */
+      animation: floatTitle 3s ease-in-out infinite;
     }
     /* Specific styling for the hover popup on the main title */
     .title .box-hover-popup {
@@ -82,6 +83,7 @@
     }
     .box:hover {
       transform: scale(1.05); /* GPU-accelerated scaling */
+      animation: shake 0.5s ease-in-out infinite;
     }
     /* New: Hover popup for boxes and title */
     .box-hover-popup {
@@ -180,6 +182,17 @@
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-50px) rotate(5deg); }
+    }
+
+    @keyframes floatTitle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      25% { transform: translateX(-5px) rotate(-2deg); }
+      75% { transform: translateX(5px) rotate(2deg); }
     }
     @keyframes skyTransition {
       0%, 40% { background: linear-gradient(to bottom, #b3e0ff, #1e90ff); }
