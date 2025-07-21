@@ -32,6 +32,7 @@
       background: #1e90ff; /* Water blue */
       z-index: -1; /* Puts it behind other content */
       pointer-events: none; /* Allow scrolling over background */
+      /* Removed position: relative; here as fish are no longer children */
     }
     .title {
       font-size: 42px;
@@ -164,11 +165,12 @@
       opacity: 0.7;
     }
     .fish {
-      position: fixed;
+      position: fixed; /* Keep fish fixed to the viewport */
       width: 80px;
       height: 50px;
       animation: swim 15s linear infinite;
       pointer-events: none; /* Allow scrolling over fish */
+      z-index: 0; /* Ensure fish are behind main content but above water elements */
     }
     .fish.small {
       width: 60px;
@@ -182,6 +184,37 @@
       width: 100px;
       height: 62px;
     }
+    /* Water Grass */
+    .water-grass {
+      position: absolute;
+      bottom: 0;
+      width: 80px;
+      height: 60px;
+      fill: #228B22; /* Forest Green */
+      z-index: -1; /* Behind fish and main content */
+      animation: sway 5s ease-in-out infinite alternate;
+    }
+    /* Coral Reef */
+    .coral-reef {
+      position: absolute;
+      bottom: 10px;
+      width: 100px;
+      height: 80px;
+      fill: #FF6347; /* Tomato */
+      z-index: -1; /* Behind fish and main content */
+      animation: pulse 4s ease-in-out infinite alternate;
+    }
+    .coral-reef.type2 {
+      fill: #DA70D6; /* Orchid */
+      width: 90px;
+      height: 70px;
+    }
+    .coral-reef.type3 {
+      fill: #FFD700; /* Gold */
+      width: 110px;
+      height: 90px;
+    }
+
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-50px) rotate(5deg); }
@@ -208,6 +241,15 @@
       0% { transform: translateX(-100px); }
       100% { transform: translateX(calc(100vw + 100px)); } /* 100vw ensures it crosses the entire viewport */
     }
+    @keyframes sway {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(3deg); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
     .sun {
       position: absolute;
       top: 85px;
@@ -416,6 +458,22 @@
         width: 80px;
         height: 50px;
       }
+      .water-grass {
+        width: 60px;
+        height: 45px;
+      }
+      .coral-reef {
+        width: 75px;
+        height: 60px;
+      }
+      .coral-reef.type2 {
+        width: 65px;
+        height: 50px;
+      }
+      .coral-reef.type3 {
+        width: 85px;
+        height: 70px;
+      }
       .sun {
         width: 50px;
         height: 50px;
@@ -454,7 +512,7 @@
         font-size: 18px;
       }
 
-      /* Arrow styling for mobile */
+      /* Adjust arrow positions for mobile */
       .arrow-svg {
         display: block; /* Make arrows visible on small screens */
       }
@@ -656,7 +714,38 @@
   </script>
 </head>
 <body>
-  <div class="water-bg"></div>
+  <div class="water-bg">
+    <!-- Water Grass -->
+    <svg class="water-grass" style="left: 5%; animation-delay: 0s;" viewBox="0 0 100 100">
+      <path d="M 0 100 Q 20 50 40 100 T 80 100 T 100 100 L 100 0 L 0 0 Z" />
+    </svg>
+    <svg class="water-grass" style="left: 20%; animation-delay: 0.5s; transform: scaleX(-1);" viewBox="0 0 100 100">
+      <path d="M 0 100 Q 20 50 40 100 T 80 100 T 100 100 L 100 0 L 0 0 Z" />
+    </svg>
+    <svg class="water-grass" style="left: 40%; animation-delay: 1s;" viewBox="0 0 100 100">
+      <path d="M 0 100 Q 20 50 40 100 T 80 100 T 100 100 L 100 0 L 0 0 Z" />
+    </svg>
+    <svg class="water-grass" style="left: 60%; animation-delay: 1.5s; transform: scaleX(-1);" viewBox="0 0 100 100">
+      <path d="M 0 100 Q 20 50 40 100 T 80 100 T 100 100 L 100 0 L 0 0 Z" />
+    </svg>
+    <svg class="water-grass" style="left: 80%; animation-delay: 2s;" viewBox="0 0 100 100">
+      <path d="M 0 100 Q 20 50 40 100 T 80 100 T 100 100 L 100 0 L 0 0 Z" />
+    </svg>
+
+    <!-- Coral Reefs -->
+    <svg class="coral-reef" style="left: 15%; bottom: 5px; animation-delay: 0.3s;" viewBox="0 0 100 100">
+      <path d="M50 0 C20 20 20 80 50 100 C80 80 80 20 50 0 Z M30 30 Q40 40 50 30 Q60 40 70 30 Q60 50 50 60 Q40 50 30 30 Z" />
+    </svg>
+    <svg class="coral-reef type2" style="left: 35%; bottom: 15px; animation-delay: 0.8s;" viewBox="0 0 100 100">
+      <path d="M50 10 C20 30 30 70 50 90 C70 70 80 30 50 10 Z M40 40 Q50 50 60 40 Q50 60 40 40 Z" />
+    </svg>
+    <svg class="coral-reef type3" style="right: 25%; bottom: 0px; animation-delay: 1.2s;" viewBox="0 0 100 100">
+      <path d="M50 0 C20 20 20 80 50 100 C80 80 80 20 50 0 Z M30 30 Q40 40 50 30 Q60 40 70 30 Q60 50 50 60 Q40 50 30 30 Z" />
+    </svg>
+    <svg class="coral-reef" style="right: 5%; bottom: 10px; animation-delay: 1.7s;" viewBox="0 0 100 100">
+      <path d="M50 10 C20 30 30 70 50 90 C70 70 80 30 50 10 Z M40 40 Q50 50 60 40 Q50 60 40 40 Z" />
+    </svg>
+  </div>
   <div class="sun"></div>
   
   <!-- Go Back Button -->
