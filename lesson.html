@@ -676,21 +676,89 @@
         font-size: 14px;
       }
     }
+
+    /* New styles for video container */
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      overflow: hidden;
+      margin-top: 15px;
+      border-radius: 10px;
+      background-color: black; /* To make sure it's visible even before video loads */
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Style for the new "Manood ng Video" button */
+    .video-btn {
+      background-color: #4CAF50; /* Green */
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 18px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .video-btn:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
   </style>
   <script>
+    // Keep track of visited boxes (opened at least once)
+    const visitedBoxes = new Set();
+    const totalConceptBoxes = 3; // Number of concept boxes
+    let congratulationsShown = false; // Flag to ensure congratulations popup shows only once
+
     function showPopup(id) {
       const popup = document.getElementById(id);
       popup.style.display = 'block';
       setTimeout(() => {
         popup.classList.add('show');
       }, 10);
+
+      // If the clicked popup is one of the concept boxes, add its ID to the visited set
+      if (['popup-characteristics', 'popup-flow', 'popup-taste'].includes(id)) {
+        visitedBoxes.add(id);
+      }
     }
+
     function closePopup(id) {
       const popup = document.getElementById(id);
       popup.classList.remove('show');
       popup.addEventListener('transitionend', function handler() {
         popup.style.display = 'none';
+        // If closing the congratulations popup, reset video and hide it
+        if (id === 'popup-congratulations') {
+          const videoFrame = document.getElementById('youtube-video');
+          if (videoFrame) {
+            videoFrame.src = ''; // Stop video playback
+          }
+          const videoContainer = document.querySelector('#popup-congratulations .video-container');
+          if (videoContainer) {
+            videoContainer.style.display = 'none'; // Hide video container
+          }
+          const learnMoreContent = document.getElementById('learn-more-content');
+          if (learnMoreContent) {
+            learnMoreContent.style.display = 'block'; // Show initial content
+          }
+        }
         popup.removeEventListener('transitionend', handler);
+
+        // After any popup closes, check if all concept boxes have been visited AND all popups are closed
+        checkAllBoxesVisitedAndClosed();
       });
     }
 
@@ -858,6 +926,33 @@
       });
     }
 
+    // New function to check if all concept boxes have been visited AND all popups are closed
+    function checkAllBoxesVisitedAndClosed() {
+      const currentlyOpenPopups = document.querySelectorAll('.popup.show');
+      
+      // Only show congratulations if all concept boxes have been visited, no other popups are open, AND it hasn't been shown yet
+      if (visitedBoxes.size === totalConceptBoxes && currentlyOpenPopups.length === 0 && !congratulationsShown) {
+        // Set the flag to true so it doesn't show again
+        congratulationsShown = true; 
+        // Show congratulations popup
+        setTimeout(() => {
+          showPopup('popup-congratulations');
+        }, 500); // Small delay for better user experience
+      }
+    }
+
+    // Function to show the YouTube video
+    function showVideo() {
+      const videoId = 'wgRuiIBbujY'; // Extracted from the URL
+      const videoFrame = document.getElementById('youtube-video');
+      const videoContainer = document.querySelector('#popup-congratulations .video-container');
+      const learnMoreContent = document.getElementById('learn-more-content');
+
+      videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`; // Autoplay the video
+      videoContainer.style.display = 'block'; // Make the video container visible
+      learnMoreContent.style.display = 'none'; // Hide the initial text and button
+    }
+
 
     window.onload = () => {
       createBubbles();
@@ -1008,7 +1103,7 @@
         <circle cx="20" cy="45" r="5" fill="#87CEEB">
           <animateMotion path="M20,45 L180,65" dur="3s" repeatCount="indefinite" begin="1s" />
         </circle>
-        <circle cx="20" cy="45" r="5" fill="#1E90FF">
+        <circle r="5" fill="#1E90FF">
           <animateMotion path="M20,45 L180,65" dur="3s" repeatCount="indefinite" begin="2s" />
         </circle>
         <text x="100" y="30" font-family="Comic Sans MS" font-size="20" text-anchor="middle">⬇️</text>
@@ -1040,6 +1135,20 @@
       <span class="taste-icon" style="color: lightblue; animation-delay: 1.2s;">🚰</span>
     </div>
     <button class="close-btn" onclick="closePopup('popup-taste')">Isara</button>
+  </div>
+
+  <!-- New: Congratulations Popup -->
+  <div id="popup-congratulations" class="popup">
+    <h2>🎉 Binabati Kita! 🎉</h2>
+    <div id="learn-more-content">
+      <p>Kumpleto mo nang natutunan ang mga pangunahing konsepto tungkol sa Liquids!</p>
+      <p>Gusto mo pa bang matuto nang higit pa?</p>
+      <button class="video-btn" onclick="showVideo()">Manood ng Video!</button>
+    </div>
+    <div class="video-container" style="display: none;">
+      <iframe id="youtube-video" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <button class="close-btn" onclick="closePopup('popup-congratulations')">Isara</button>
   </div>
 
   <!-- Water drops -->
